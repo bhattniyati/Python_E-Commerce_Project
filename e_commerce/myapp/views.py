@@ -299,19 +299,30 @@ def changepassword(request):
 # Logic for profile
 @never_cache
 def profile(request):
-
     try:
-        uemail=request.session['email']
-        data=User.objects.get(email=uemail)
-        messages.success(request,"Profile Updates Successfullyy...")
-        if data.role=="buyer":
-            return render(request,"profile.html",{'data':data})
+        user = User.objects.get(email=request.session['email'])
+        if request.method == "POST":
+            user.email = request.POST['email']
+            user.firstname = request.POST['firstname']
+            user.lastname = request.POST['lastname']
+            user.mobile = request.POST['mobile']
+            user.save()
+            
+            if user.role == "buyer":
+                messages.success(request,"Profile Updated Successfullyy...")
+                return render(request,"profile.html",{'user':user})   
+            else:
+                messages.success(request,"Profile Updated Successfullyy...")
+                return render(request,"sprofile.html",{'user':user})  
+           
         else:
-            return render(request,"sprofile.html",{'data':data})
-    
-    except Exception as e:
-        print("error\n",e)
-        return redirect(index)
+            if user.role == "buyer":
+                return render(request,"profile.html",{'user':user})   
+            else:
+                return render(request,"sprofile.html",{'user':user})
+    except:
+        return redirect('index')       
+
 
 # Logic for Addproduct
 @never_cache
