@@ -464,23 +464,36 @@ def removewish(request,pk):
 @never_cache
 def scart(request):
     try:
-        user=User.objects.get(email=request.session['email'])
-        order=Order.objects.filter(user=user).first()
-        cart=Cart.objects.filter(user=user,payment_status=False)
-        request.session['cart']=len(cart)
+        user = User.objects.get(email=request.session['email'])
+        order = Order.objects.filter(user=user).first()
+        cart = Cart.objects.filter(user=user, payment_status=False)
+        request.session['cart'] = len(cart)
 
-        if request.method=="POST":
-            Order.objects.create(user=user,
-                                address=request.POST['address'],
-                                pincode=request.POST['pincode']
-                            )
-            return render(request,"scart.html",{'cart':cart,'user':user})
-           
-        else:
-            return render(request,"scart.html",{'cart':cart,'user':user,'order':order})
-    
+        if request.method == "POST":
+            if order:
+                # Update the existing order
+                order.address = request.POST['address']
+                order.pincode = request.POST['pincode']
+                order.save()
+
+                user.firstname= request.POST['firstname']
+                user.lastname= request.POST['lastname']
+                user.mobile= request.POST['mobile']
+                user.save()
+            else:
+                # Create a new order
+                order = Order.objects.create(
+                    user=user,
+                    address=request.POST['address'],
+                    pincode=request.POST['pincode']
+                )
+            return render(request, "scart.html", {'cart':cart, 'user':user, 'order':order})
+
+        return render(request, "scart.html", {'cart':cart, 'user':user, 'order':order})
+
     except User.DoesNotExist:
         return redirect("index")
+
 
 # Logic for add cart
 def addcart(request,pk):
