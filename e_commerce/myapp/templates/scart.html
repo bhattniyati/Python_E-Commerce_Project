@@ -155,22 +155,35 @@
 
 				<div class="col-sm-10 col-lg-7 col-xl-5 m-lr-auto m-b-50">
 					<div class="bor10 p-lr-40 p-t-30 p-b-40 m-l-63 m-r-40 m-lr-0-xl p-lr-15-sm">
-						<h4 class="mtext-109 cl2 p-b-30">
+						<center><h4 class="mtext-109 cl2 p-b-30">
 							Order Details
-						</h4>
+						</h4></center>
 					<form action="{% url 'scart' %}" method="post">
 							{% csrf_token %}
+						
+						<div class="flex-w flex-t bor12 p-t-15 p-b-30">
+							<div class="size-208 w-full-ssm">
+								<span class="stext-110 cl2">
+									Email:
+								</span>
+							</div>
+							<div class="size-209">
+								<span class="mtext-110 cl2">
+									<input type="text" name="email" value="{{user.email}}" class="form-control" readonly/>
+								</span>
+							</div>
+						</div>
+	
 				
-						<div class="flex-w flex-t bor12 p-b-13">
-							<div class="size-208">
+						<div class="flex-w flex-t bor12 p-t-15 p-b-30">
+							<div class="size-208 w-full-ssm">
 								<span class="stext-110 cl2">
 									First Name:
 								</span>
 							</div>
-
 							<div class="size-209">
 								<span class="mtext-110 cl2">
-									<input type="text" value="{{user.firstname}}" class="form-control" />
+									<input type="text" name="firstname" value="{{user.firstname}}" class="form-control" />
 								</span>
 							</div>
 						</div>
@@ -183,7 +196,7 @@
 							</div>
 							<div class="size-209">
 								<span class="mtext-110 cl2">
-									<input type="text" value="{{user.lastname}}" class="form-control" />
+									<input type="text" name="lastname" value="{{user.lastname}}" class="form-control" />
 								</span>
 							</div>
 						</div>
@@ -196,24 +209,12 @@
 							</div>
 							<div class="size-209">
 								<span class="mtext-110 cl2">
-									<input type="text" value="{{user.mobile}}" class="form-control" />
+									<input type="text" name="mobile" value="{{user.mobile}}" class="form-control" />
 								</span>
 							</div>
 						</div>
 
-						<div class="flex-w flex-t bor12 p-t-15 p-b-30">
-							<div class="size-208 w-full-ssm">
-								<span class="stext-110 cl2">
-									Email:
-								</span>
-							</div>
-							<div class="size-209">
-								<span class="mtext-110 cl2">
-									<input type="text" value="{{user.email}}" class="form-control" />
-								</span>
-							</div>
-						</div>
-
+					
 						<div class="flex-w flex-t bor12 p-t-15 p-b-30">
 							<div class="size-208 w-full-ssm">
 								<span class="stext-110 cl2">
@@ -239,8 +240,13 @@
 								</span>
 							</div>
 						</div>
-
-						<br><center><input type="submit" class="btn btn-primary" value="submit"></center>
+						<br><center>
+							{% if order %}
+							<input type="submit" class="btn btn-primary" value="Update">
+							{% else %}
+							<input type="submit" class="btn btn-primary" value="Submit">
+							{% endif %}
+							</center>
 						<br><center><a href="{% url 'checkout'  %}"><button type="button" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
 							Go To Order Detail Page
 						  </button></a></center>
